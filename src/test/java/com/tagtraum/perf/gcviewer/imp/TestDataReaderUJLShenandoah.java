@@ -436,4 +436,25 @@ public class TestDataReaderUJLShenandoah {
                 closeTo(0.002911, 0.0000001));
     }
 
+    @Test
+    public void testPauseFinalRoots() throws Exception {
+        TestLogHandler handler = new TestLogHandler();
+        handler.setLevel(Level.WARNING);
+        GCResource gcResource = new GcResourceFile("byteArray");
+        gcResource.getLogger().addHandler(handler);
+        InputStream in = new ByteArrayInputStream(
+                ("[5.214s][info][gc,start] GC(0) Pause Final Roots\n" +
+                 "[5.214s][info][gc      ] GC(0) Pause Final Roots 0.021ms\n"
+                ).getBytes());
+
+        DataReader reader = new DataReaderUnifiedJvmLogging(gcResource, in);
+        GCModel model = reader.read();
+
+        assertThat("number of warnings", handler.getCount(), is(0));
+        assertThat("number of events", model.size(), is(1));
+        assertThat("event type", model.get(0).getTypeAsString(), is("Pause Final Roots"));
+        assertThat("event pause", model.get(0).getPause(), closeTo(0.000021, 0.0000001));
+        assertThat("event preUsed", model.get(0).getPreUsed(), is(0));
+    }
+
 }

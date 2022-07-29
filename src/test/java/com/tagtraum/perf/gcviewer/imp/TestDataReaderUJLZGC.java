@@ -17,12 +17,13 @@ import org.junit.Test;
  */
 public class TestDataReaderUJLZGC {
     private static final int CONCURRENT_MARK_INDEX = 0;
-    private static final int CONCURRENT_PROCESS_REFERENCES_INDEX = 1;
-    private static final int CONCURRENT_RESET_RELOCATION_SET_INDEX = 2;
-    private static final int CONCURRENT_DESTROY_DETACHED_PAGES_INDEX = 3;
-    private static final int CONCURRENT_SELECT_RELOCATION_SET_INDEX = 4;
-    private static final int CONCURRENT_PREPARE_RELOCATION_SET_INDEX = 5;
-    private static final int CONCURRENT_RELOCATE_INDEX = 6;
+    private static final int CONCURRENT_MARK_FREE_INDEX = 1;
+    private static final int CONCURRENT_PROCESS_REFERENCES_INDEX = 2;
+    private static final int CONCURRENT_RESET_RELOCATION_SET_INDEX = 3;
+    private static final int CONCURRENT_DESTROY_DETACHED_PAGES_INDEX = 4;
+    private static final int CONCURRENT_SELECT_RELOCATION_SET_INDEX = 5;
+    private static final int CONCURRENT_PREPARE_RELOCATION_SET_INDEX = 6;
+    private static final int CONCURRENT_RELOCATE_INDEX = 7;
 
 
     private GCModel gcAllModel;
@@ -46,13 +47,13 @@ public class TestDataReaderUJLZGC {
 
     @Test
     public void testGcAll() {
-        assertThat("size", gcAllModel.size(), is(8));
+        assertThat("size", gcAllModel.size(), is(9));
         assertThat("amount of gc event types", gcAllModel.getGcEventPauses().size(), is(1));
         assertThat("amount of gc events", gcAllModel.getGCPause().getN(), is(1));
         assertThat("amount of full gc event types", gcAllModel.getFullGcEventPauses().size(), is(0));
         assertThat("amount of gc phases event types", gcAllModel.getGcEventPhases().size(), is(3));
         assertThat("amount of full gc events", gcAllModel.getFullGCPause().getN(), is(0));
-        assertThat("amount of concurrent pause types", gcAllModel.getConcurrentEventPauses().size(), is(7));
+        assertThat("amount of concurrent pause types", gcAllModel.getConcurrentEventPauses().size(), is(8));
     }
 
     @Test
@@ -98,6 +99,18 @@ public class TestDataReaderUJLZGC {
                 "Pause Mark End",
                 AbstractGCEvent.Type.UJL_ZGC_PAUSE_MARK_END,
                 0.000695,
+                0, 0, 0,
+                AbstractGCEvent.Generation.TENURED,
+                false);
+    }
+
+    @Test
+    public void testGcAllConcurrentMarkFree() {
+        AbstractGCEvent<?> concurrentMarkFreeEvent = gcAllModel.get(CONCURRENT_MARK_FREE_INDEX);
+        UnittestHelper.testMemoryPauseEvent(concurrentMarkFreeEvent,
+                "Concurrent Mark Free",
+                AbstractGCEvent.Type.UJL_ZGC_CONCURRENT_MARK_FREE,
+                0.000001,
                 0, 0, 0,
                 AbstractGCEvent.Generation.TENURED,
                 false);

@@ -3,6 +3,7 @@
 [1.206s][info][gc,phases] GC(0) Pause Mark Start 1.279ms
 [1.211s][info][gc,phases] GC(0) Concurrent Mark 5.216ms
 [1.212s][info][gc,phases] GC(0) Pause Mark End 0.695ms
+[1.212s][info][gc,phases] GC(0) Concurrent Mark Free 0.001ms
 [1.212s][info][gc,phases] GC(0) Concurrent Process Non-Strong References 0.258ms
 [1.212s][info][gc,phases] GC(0) Concurrent Reset Relocation Set 0.001ms
 [1.212s][info][gc,phases] GC(0) Concurrent Destroy Detached Pages 0.001ms

@@ -697,6 +697,7 @@ public abstract class AbstractGCEvent<T extends AbstractGCEvent<T>> implements S
         public static final Type UJL_SHEN_CONCURRENT_CLEANUP = new Type("Concurrent cleanup", Generation.TENURED, Concurrency.CONCURRENT, GcPattern.GC_MEMORY_PAUSE);
         public static final Type UJL_SHEN_CONCURRENT_PRECLEANING = new Type("Concurrent precleaning", Generation.TENURED, Concurrency.CONCURRENT, GcPattern.GC_MEMORY_PAUSE);
         public static final Type UJL_SHEN_CONCURRENT_UNCOMMIT = new Type("Concurrent uncommit", Generation.TENURED, Concurrency.CONCURRENT, GcPattern.GC_MEMORY_PAUSE);
+        public static final Type UJL_SHEN_FINAL_ROOTS = new Type("Pause Final Roots", Generation.TENURED, Concurrency.SERIAL, GcPattern.GC_PAUSE);
 
         // unified jvm logging ZGC event types
         public static final Type UJL_ZGC_GARBAGE_COLLECTION = new Type("Garbage Collection", Generation.TENURED, Concurrency.SERIAL, GcPattern.GC_MEMORY_PERCENTAGE);
@@ -704,6 +705,7 @@ public abstract class AbstractGCEvent<T extends AbstractGCEvent<T>> implements S
         public static final Type UJL_ZGC_PAUSE_MARK_END = new Type("Pause Mark End", Generation.TENURED, Concurrency.SERIAL, GcPattern.GC_PAUSE);
         public static final Type UJL_ZGC_PAUSE_RELOCATE_START = new Type("Pause Relocate Start", Generation.TENURED, Concurrency.SERIAL, GcPattern.GC_PAUSE);
         public static final Type UJL_ZGC_CONCURRENT_MARK = new Type("Concurrent Mark", Generation.TENURED, Concurrency.CONCURRENT, GcPattern.GC_PAUSE);
+        public static final Type UJL_ZGC_CONCURRENT_MARK_FREE = new Type("Concurrent Mark Free", Generation.TENURED, Concurrency.CONCURRENT, GcPattern.GC_PAUSE);
         public static final Type UJL_ZGC_CONCURRENT_NONREF = new Type("Concurrent Process Non-Strong References", Generation.TENURED, Concurrency.CONCURRENT, GcPattern.GC_PAUSE);
         public static final Type UJL_ZGC_CONCURRENT_RESET_RELOC_SET = new Type("Concurrent Reset Relocation Set", Generation.TENURED, Concurrency.CONCURRENT, GcPattern.GC_PAUSE);
         public static final Type UJL_ZGC_CONCURRENT_DETATCHED_PAGES = new Type("Concurrent Destroy Detached Pages", Generation.TENURED, Concurrency.CONCURRENT, GcPattern.GC_PAUSE);

@@ -6,9 +6,13 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.tagtraum.perf.gcviewer.exp.AbstractDataWriter;
+import com.tagtraum.perf.gcviewer.math.DoubleData;
+import com.tagtraum.perf.gcviewer.math.DoubleDataPercentile;
 import com.tagtraum.perf.gcviewer.model.GCModel;
 import com.tagtraum.perf.gcviewer.util.FormattedValue;
 import com.tagtraum.perf.gcviewer.util.MemoryFormat;
@@ -69,7 +73,7 @@ public class SummaryDataWriter extends AbstractDataWriter {
 
     private void initialiseFormatters() {
         pauseFormatter = NumberFormat.getInstance();
-        pauseFormatter.setMaximumFractionDigits(5);
+        pauseFormatter.setMaximumFractionDigits(6);
 
         totalTimeFormatter = new TimeFormat();
 
@@ -227,6 +231,79 @@ public class SummaryDataWriter extends AbstractDataWriter {
         exportValue(out, "fullGCPausePc", percentFormatter.format(model.getFullGCPause().getSum()*100.0/model.getPause().getSum()), "%");
         exportValue(out, "gcPause", gcTimeFormatter.format(model.getGCPause().getSum()), "s");
         exportValue(out, "gcPausePc", percentFormatter.format(model.getGCPause().getSum()*100.0/model.getPause().getSum()), "%");
+
+        // Add extra statistical data.
+        // sum, count, min, max, average, standardDeviation, median, 75th percentile, 95, 99, 99.5, 99.9
+        out.println();
+        // All Pause stats
+        if (pauseDataAvailable) {
+            exportValue(out, "pause_sum",               pauseFormatter.format(model.getPause().getSum()), "s");
+            exportValue(out, "pause_count",             pauseFormatter.format(model.getPause().getN()), "-");
+            exportValue(out, "pause_min",               pauseFormatter.format(model.getPause().getMin()), "s");
+            exportValue(out, "pause_max",               pauseFormatter.format(model.getPause().getMax()), "s");
+            exportValue(out, "pause_average",           pauseFormatter.format(model.getPause().average()), "s");
+            exportValue(out, "pause_standardDeviation", pauseFormatter.format(model.getPause().standardDeviation()), "s");
+            exportValue(out, "pause_median",            pauseFormatter.format(((DoubleDataPercentile)model.getPause()).getPercentile(50)), "s");
+            exportValue(out, "pause_75th_percentile",   pauseFormatter.format(((DoubleDataPercentile)model.getPause()).getPercentile(50)), "s");
+            exportValue(out, "pause_95th_percentile",   pauseFormatter.format(((DoubleDataPercentile)model.getPause()).getPercentile(75)), "s");
+            exportValue(out, "pause_99th_percentile",   pauseFormatter.format(((DoubleDataPercentile)model.getPause()).getPercentile(95)), "s");
+            exportValue(out, "pause_99.5th_percentile", pauseFormatter.format(((DoubleDataPercentile)model.getPause()).getPercentile(99)), "s");
+            exportValue(out, "pause_99.9th_percentile", pauseFormatter.format(((DoubleDataPercentile)model.getPause()).getPercentile(99.9)), "s");
+        }
+        out.println();
+        // GC Pause stats
+        if (gcDataAvailable) {
+            exportValue(out, "gcPause_sum",               pauseFormatter.format(model.getGCPause().getSum()), "s");
+            exportValue(out, "gcPause_count",             pauseFormatter.format(model.getGCPause().getN()), "-");
+            exportValue(out, "gcPause_min",               pauseFormatter.format(model.getGCPause().getMin()), "s");
+            exportValue(out, "gcPause_max",               pauseFormatter.format(model.getGCPause().getMax()), "s");
+            exportValue(out, "gcPause_average",           pauseFormatter.format(model.getGCPause().average()), "s");
+            exportValue(out, "gcPause_standardDeviation", pauseFormatter.format(model.getGCPause().standardDeviation()), "s");
+            exportValue(out, "gcPause_median",            pauseFormatter.format(((DoubleDataPercentile)model.getGCPause()).getPercentile(50)), "s");
+            exportValue(out, "gcPause_75th_percentile",   pauseFormatter.format(((DoubleDataPercentile)model.getGCPause()).getPercentile(50)), "s");
+            exportValue(out, "gcPause_95th_percentile",   pauseFormatter.format(((DoubleDataPercentile)model.getGCPause()).getPercentile(75)), "s");
+            exportValue(out, "gcPause_99th_percentile",   pauseFormatter.format(((DoubleDataPercentile)model.getGCPause()).getPercentile(95)), "s");
+            exportValue(out, "gcPause_99.5th_percentile", pauseFormatter.format(((DoubleDataPercentile)model.getGCPause()).getPercentile(99)), "s");
+            exportValue(out, "gcPause_99.9th_percentile", pauseFormatter.format(((DoubleDataPercentile)model.getGCPause()).getPercentile(99.9)), "s");
+        }
+        out.println();
+        // Full GC Pause stats
+        if (fullGCDataAvailable) {
+            exportValue(out, "fullGCPause_sum",               pauseFormatter.format(model.getFullGCPause().getSum()), "s");
+            exportValue(out, "fullGCPause_count",             pauseFormatter.format(model.getFullGCPause().getN()), "-");
+            exportValue(out, "fullGCPause_min",               pauseFormatter.format(model.getFullGCPause().getMin()), "s");
+            exportValue(out, "fullGCPause_max",               pauseFormatter.format(model.getFullGCPause().getMax()), "s");
+            exportValue(out, "fullGCPause_average",           pauseFormatter.format(model.getFullGCPause().average()), "s");
+            exportValue(out, "fullGCPause_standardDeviation", pauseFormatter.format(model.getFullGCPause().standardDeviation()), "s");
+            exportValue(out, "fullGCPause_median",            pauseFormatter.format(((DoubleDataPercentile)model.getFullGCPause()).getPercentile(50)), "s");
+            exportValue(out, "fullGCPause_75th_percentile",   pauseFormatter.format(((DoubleDataPercentile)model.getFullGCPause()).getPercentile(50)), "s");
+            exportValue(out, "fullGCPause_95th_percentile",   pauseFormatter.format(((DoubleDataPercentile)model.getFullGCPause()).getPercentile(75)), "s");
+            exportValue(out, "fullGCPause_99th_percentile",   pauseFormatter.format(((DoubleDataPercentile)model.getFullGCPause()).getPercentile(95)), "s");
+            exportValue(out, "fullGCPause_99.5th_percentile", pauseFormatter.format(((DoubleDataPercentile)model.getFullGCPause()).getPercentile(99)), "s");
+            exportValue(out, "fullGCPause_99.9th_percentile", pauseFormatter.format(((DoubleDataPercentile)model.getFullGCPause()).getPercentile(99.9)), "s");
+        }
+        // ZGC stats: [gc,phases]
+        if (model.size() > 1 && model.getGcEventPhases().size() > 0) {
+            DoubleData doubleDataPhases = new DoubleDataPercentile();
+            for (Entry<String, DoubleData> entry : model.getGcEventPhases().entrySet()) {
+                List<Double> doubleDataPhase = ((DoubleDataPercentile)entry.getValue()).getDoubleData();
+                for (Double d : doubleDataPhase)
+                    doubleDataPhases.add(d);
+            }
+            exportValue(out, "gcPhase_sum",               pauseFormatter.format(doubleDataPhases.getSum()), "s");
+            exportValue(out, "gcPhase_count",             pauseFormatter.format(doubleDataPhases.getN()), "-");
+            exportValue(out, "gcPhase_min",               pauseFormatter.format(doubleDataPhases.getMin()), "s");
+            exportValue(out, "gcPhase_max",               pauseFormatter.format(doubleDataPhases.getMax()), "s");
+            exportValue(out, "gcPhase_average",           pauseFormatter.format(doubleDataPhases.average()), "s");
+            exportValue(out, "gcPhase_standardDeviation", pauseFormatter.format(doubleDataPhases.standardDeviation()), "s");
+            exportValue(out, "gcPhase_median",            pauseFormatter.format(((DoubleDataPercentile)doubleDataPhases).getPercentile(50)), "s");
+            exportValue(out, "gcPhase_75th_percentile",   pauseFormatter.format(((DoubleDataPercentile)doubleDataPhases).getPercentile(50)), "s");
+            exportValue(out, "gcPhase_95th_percentile",   pauseFormatter.format(((DoubleDataPercentile)doubleDataPhases).getPercentile(75)), "s");
+            exportValue(out, "gcPhase_99th_percentile",   pauseFormatter.format(((DoubleDataPercentile)doubleDataPhases).getPercentile(95)), "s");
+            exportValue(out, "gcPhase_99.5th_percentile", pauseFormatter.format(((DoubleDataPercentile)doubleDataPhases).getPercentile(99)), "s");
+            exportValue(out, "gcPhase_99.9th_percentile", pauseFormatter.format(((DoubleDataPercentile)doubleDataPhases).getPercentile(99.9)), "s");
+        }
+        out.println();
     }
 
     private boolean isSignificant(final double average, final double standardDeviation) {

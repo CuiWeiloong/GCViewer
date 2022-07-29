@@ -78,7 +78,7 @@ public class GCModel implements Serializable {
     private DoubleData fullGCPause;
     private double lastFullGcPauseTimeStamp = 0;
     private DoubleData fullGcPauseInterval; // interval between two stop the Full GC pauses
-    private DoubleDataPercentile gcPause; // not full gc but stop the world pause
+    private DoubleData gcPause; // not full gc but stop the world pause
     private DoubleData vmOperationPause; // "application stopped"
     private double lastGcPauseTimeStamp = 0;
     private DoubleData pauseInterval; // interval between two stop the world pauses
@@ -201,8 +201,8 @@ public class GCModel implements Serializable {
         this.postFullGCUsedHeap = new IntData();
 
         this.postGCUsedMemory = new IntData();
-        this.totalPause = new DoubleData();
-        this.fullGCPause = new DoubleData();
+        this.totalPause = new DoubleDataPercentile();
+        this.fullGCPause = new DoubleDataPercentile();
         this.fullGcPauseInterval = new DoubleData();
         this.gcPause = new DoubleDataPercentile();
         this.vmOperationPause = new DoubleData();
